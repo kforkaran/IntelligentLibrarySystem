@@ -1,3 +1,20 @@
 .barcodeCanvas {
   margin: 20px;
 }
+/* App.css */
+.container_parent {
+  height: 89vh;
+  /* background-color: #6b0f1a;
+  background-image: linear-gradient(315deg, #6b0f1a 0%, #b91372 74%); */
+  width: 100%;
+}
+
+.hero_text {
+  size: 3rem;
+  /* color: white; */
+}
+
+/* Navbar.js */
+.nav-root {
+  flex-grow: 1;
+}
