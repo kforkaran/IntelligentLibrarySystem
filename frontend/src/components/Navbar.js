@@ -1,8 +1,8 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Pop from './Pop';
 import Typography from '@material-ui/core/Typography';
 // import InputBase from '@material-ui/core/InputBase';
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SearchAppBar() {
+export default function Navbar() {
   const classes = useStyles();
 
   return (
@@ -43,16 +43,11 @@ export default function SearchAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            Andaman College Library
           </Typography>
+          <Pop>Login</Pop>
         </Toolbar>
       </AppBar>
-      <Grid justify="center" alignItems="center">
-      <Typography className={classes.title} variant="h6" noWrap>
-        Andaman College Library
-      </Typography>
-        <SearchBar />
-      </Grid>
     </div>
   );
 }
