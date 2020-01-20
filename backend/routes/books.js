@@ -70,7 +70,6 @@ router.post("/addBook", async (req, res) => {
 });
 
 router.get("/search", async (req, res) => {
-  console.log(req.query.id);
   const book = await Book.findOne({ id: req.query.id });
   if (book) {
     if (book.stock == 0) {
