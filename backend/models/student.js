@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Student = new mongoose.Schema({
-  rollNo: Number,
+  rollNo: String,
   booksIssued: [
     {
       bookId: String,

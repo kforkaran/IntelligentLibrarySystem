@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Teacher = new mongoose.Schema({
-  id: String,
+  rollNo: String,
   booksIssued: [
     {
       bookId: String,
