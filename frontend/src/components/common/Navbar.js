@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 // import SearchIcon from '@material-ui/icons/Search';
 // import MicIcon from '@material-ui/icons/Mic';
-import SearchBar from './SearchBar';
+// import SearchBar from './SearchBar';
 
 const useStyles = makeStyles(theme => ({
   root: {
