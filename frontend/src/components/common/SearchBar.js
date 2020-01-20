@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
@@ -26,73 +26,113 @@ import MicIcon from '@material-ui/icons/Mic';
 //   }
 // });
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    marginTop: '3.5rem',
-    marginBottom: '20vh',
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 400,
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-}));
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+const recognition = new SpeechRecognition()
 
+recognition.continous = true
+recognition.interimResults = true
+recognition.lang = 'en-US'
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
+//------------------------COMPONENT-----------------------------
 
-var grammar = '#JSGF V1.0;'
- 
-var speechRecognitionList = new SpeechGrammarList();
-var recognition = new SpeechRecognition();
-recognition.grammars = speechRecognitionList;
-speechRecognitionList.addFromString(grammar, 1);
-recognition.interimResults = false;
-recognition.lang = 'en-US';
+const styles = theme => ({
+    root: {
+      marginTop: '3.5rem',
+      marginBottom: '20vh',
+      padding: '2px 4px',
+      display: 'flex',
+      alignItems: 'center',
+      width: 400,
+    },
+    input: {
+      marginLeft: '1rem',
+      flex: 1,
+    },
+    iconButton: {
+      padding: 10,
+    },
+    divider: {
+      height: 28,
+      margin: 4,
+    },
+  });
 
-const handleChange = (e) => {
-  // e.preventDefault();
-  // UserDictation.start();
-  // setTimeout(UserDictation.stop(),2000);
- 
- 
-  recognition.start();
-        
- 
-        recognition.onresult = function(event) {
-            var last = event.results.length - 1;
-            var command = event.results[last][0].transcript;
-            // message.textContent = 'Voice Input: ' + command + '.';  
-            console.log(command);
-            console.log('voice recognize');
-        };
- 
-        recognition.onspeechend = function() {
-            recognition.stop();
-        };
- 
-        recognition.onerror = function(event) {
-            // message.textContent = 'Error occurred in recognition: ' + event.error;
-            console.log('Error in recognition');
-        }        
- 
-}
+class SearchBar extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      listening: false
+    }
+    this.toggleListen = this.toggleListen.bind(this)
+    this.handleListen = this.handleListen.bind(this)
+  }
 
-export default function CustomizedInputBase() {
-  const classes = useStyles();
+  toggleListen() {
+    this.setState({
+      listening: !this.state.listening
+    }, this.handleListen)
+  }
 
-  return (
+  handleListen() {
+    console.log('listening?', this.state.listening)
+
+    if (this.state.listening) {
+      recognition.start()
+      recognition.onend = () => {
+        console.log("...continue listening...")
+        recognition.start()
+      }
+
+    } else {
+      recognition.stop()
+      recognition.onend = () => {
+        console.log("Stopped listening per click")
+      }
+    }
+
+    recognition.onstart = () => {
+      console.log("Listening!")
+    }
+
+    let finalTranscript = ''
+    recognition.onresult = event => {
+      let interimTranscript = ''
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) finalTranscript += transcript + ' ';
+        else interimTranscript += transcript;
+      }
+      document.getElementById('interim').innerHTML = interimTranscript
+      document.getElementById('final').innerHTML = finalTranscript
+    //-------------------------COMMANDS------------------------------------
+
+      const transcriptArr = finalTranscript.split(' ')
+      const stopCmd = transcriptArr.slice(-3, -1)
+      console.log('stopCmd', stopCmd)
+
+      if (stopCmd[0] === 'stop' && stopCmd[1] === 'listening'){
+        recognition.stop()
+        recognition.onend = () => {
+          console.log('Stopped listening per command')
+          const finalText = transcriptArr.slice(0, -3).join(' ')
+          document.getElementById('final').innerHTML = finalText
+          console.log('Final text is: ' + finalText);
+        }
+      }
+    }
+    
+  //-----------------------------------------------------------------------
+    
+    recognition.onerror = event => {
+      console.log("Error occurred in recognition: " + event.error)
+    }
+
+  }
+
+  render() {
+    const {classes} = this.props;
+    return (
     <Paper component="form" className={classes.root}>
       <InputBase
         className={classes.input}
@@ -103,9 +143,14 @@ export default function CustomizedInputBase() {
         <SearchIcon />
       </IconButton>
       <Divider className={classes.divider} orientation="vertical" />
-      <IconButton id="message" onClick={handleChange} color="primary" className={classes.iconButton} aria-label="directions">
+      <IconButton id="message microphone-btn" onClick={this.toggleListen} color="primary" className={classes.iconButton} aria-label="directions">
         <MicIcon />
       </IconButton>
+      <div id='interim'></div>
+      <div id='final'></div>
     </Paper>
   );
+  }
 }
+
+export default withStyles(styles)(SearchBar);

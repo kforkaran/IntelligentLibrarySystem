@@ -12,6 +12,8 @@ import Dashboard from "./components/Dash/Dashboard";
 import "./App.css";
 import Barcode from "./components/Barcode";
 import Landing from "./components/Landing";
+import Books from "./components/Books/Books";
+import SingleBook from "./components/SingleBook/SingleBook";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route exact path="/" component={Landing} />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/barcode" component={Barcode} />
+          <Route exact path="/books" component={Books} />
+          <Route exact path="/singlebook/:id" component={SingleBook} />
         </div>
       </Router>
     </Provider>
