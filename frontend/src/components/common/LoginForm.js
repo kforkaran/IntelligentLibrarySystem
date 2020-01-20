@@ -35,7 +35,6 @@ class LoginForm extends React.Component {
         email: this.state.email,
         password: this.state.password
       };
-
       this.props.loginUser(userData);
     //   this.props.history.push('/dashboard');
     }
@@ -54,6 +53,7 @@ class LoginForm extends React.Component {
                     id="username"
                     label="Username"
                     type="email"
+                    name="email"
                     onChange={this.onChange}
                     fullWidth
                     autoFocus
@@ -70,6 +70,7 @@ class LoginForm extends React.Component {
                     id="username"
                     label="Password"
                     type="password"
+                    name="password"
                     onChange={this.onChange}
                     fullWidth
                     required

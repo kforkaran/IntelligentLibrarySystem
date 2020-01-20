@@ -10,6 +10,7 @@ const Admin = require('../models/admin');
 
 
 router.post('/login', (req, res) => {
+  console.log("coming");
   // const { errors, isValid } = validateLoginInput(req.body);
   const errors = [];
   const isValid = true;

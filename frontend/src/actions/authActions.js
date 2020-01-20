@@ -6,7 +6,7 @@ import { GET_ERRORS, SET_CURRENT_USER } from "./types";
 
 export const loginUser = userData => dispatch => {
   axios
-    .post("/api/admin/login", userData)
+    .post("http://localhost:8000/api/admin/login", userData)
     .then(res => {
       console.log(res);
       // Save to localStorage
