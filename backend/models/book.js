@@ -5,10 +5,10 @@ const Book = new mongoose.Schema({
   noOfCopies: Number,
   volumeInfo: {
     title: String,
-    subTitle: String,
+    subtitle: String,
     authors: [],
     publisher: String,
-    publishDate: Date,
+    publishedDate: Date,
     description: String,
     pageCount: Number,
     categories: [],
