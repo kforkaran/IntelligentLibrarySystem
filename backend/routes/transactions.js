@@ -5,13 +5,14 @@ const Student = require("../models/student");
 const Teacher = require("../models/teacher");
 const IssuedBooks = require("../models/issuedBooks");
 
+// required data: id, issuedDate, dueDate, borrowerType, borrowerId
 router.post("/issue", async (req, res) => {
   const result = await IssuedBooks.find({ id: req.body.id });
   const book = await Book.find({ id: req.body.id });
-  const uniqueId = book.codesArray.pop();
-  book.stock--;
-  if (result) {
-    result.books.push({
+  const uniqueId = book[0].codesArray.pop();
+  book[0].stock--;
+  if (result && result.length !== 0) {
+    result[0].books.push({
       uniqueId: uniqueId,
       issuedDate: req.body.issuedDate,
       dueDate: req.body.dueDate,
@@ -20,7 +21,7 @@ router.post("/issue", async (req, res) => {
     });
     await IssuedBooks.findOneAndUpdate(
       { id: req.body.id },
-      { books: result.books }
+      { books: result[0].books }
     );
   } else {
     const issueBook = new IssuedBooks({
@@ -34,7 +35,7 @@ router.post("/issue", async (req, res) => {
       borrowerType: req.body.borrowerType.toLowerCase(),
       borrowerId: req.body.borrowerId
     });
-    await issueBook.save();
+    await issueBook.save().catch(err => console.log(error));
   }
   if (req.body.borrowerType === "student") {
     const student = new Student({
@@ -47,7 +48,23 @@ router.post("/issue", async (req, res) => {
       issuedDate: req.body.issuedDate,
       dueDate: req.body.dueDate
     });
-    await student.save();
+    const st = await Student.findOne({ rollNo: req.body.borrowerId });
+    if (st) {
+      st.booksIssued.push({
+        bookId: req.body.id,
+        bookUniqueId: uniqueId,
+        issuedDate: req.body.issuedDate,
+        dueDate: req.body.dueDate
+      });
+      await Student.findOneAndUpdate(
+        { rollNo: req.body.borrowerId },
+        { booksIssued: st.booksIssued }
+      );
+    } else {
+      await student.save().then(resp => {
+        console.log(resp);
+      });
+    }
   } else if (req.body.borrowerType === "teacher") {
     const teacher = new Teacher({
       rollNo: req.body.borrowerId,
@@ -59,47 +76,64 @@ router.post("/issue", async (req, res) => {
       issuedDate: req.body.issuedDate,
       dueDate: req.body.dueDate
     });
-    await teacher.save();
+    const t = await Teacher.findOne({ rollNo: req.body.bookId });
+    if (t) {
+      t.booksIssued.push({
+        bookId: req.body.id,
+        bookUniqueId: uniqueId,
+        issuedDate: req.body.issuedDate,
+        dueDate: req.body.dueDate
+      });
+      await Teacher.findOneAndUpdate(
+        { rollNo: req.body.borrowerId },
+        { booksIssued: t.booksIssued }
+      );
+    } else {
+      await teacher.save().catch(err => console.log(err));
+    }
   }
-  await Book.findByIdAndUpdate(
+  await Book.findOneAndUpdate(
     { id: req.body.id },
-    { stock: book.stock, codesArray: book.codesArray }
+    { stock: book[0].stock, codesArray: book[0].codesArray }
   );
   res.json({
     success: true
   });
 });
 
+// required data: id, uniqueId
 router.post("/return", async (req, res) => {
   const issuedBook = await IssuedBooks.find({ id: req.body.id });
   const book = await Book.find({ id: req.body.id });
-
-  book.stock++;
-  book.codesArray.push(req.body.uniqueId);
+  book[0].stock++;
+  book[0].codesArray.push(req.body.uniqueId);
 
   let issues = [];
   let borrowerId, borrowerType;
-  for (let i = 0; i < issuedBook.books.length; i++) {
-    if (issuedBook.books[i].uniqueId !== req.body.uniqueId) {
-      issues.push(issuedBook.books[i]);
+  for (let i = 0; i < issuedBook[0].books.length; i++) {
+    if (issuedBook[0].books[i].uniqueId !== req.body.uniqueId) {
+      issues.push(issuedBook[0].books[i]);
     } else {
-      borrowerId = issuedBook.books[i].borrowerId;
-      borrowerType = issuedBook.books[i].borrowerType;
+      borrowerId = issuedBook[0].books[i].borrowerId;
+      borrowerType = issuedBook[0].books[i].borrowerType;
     }
   }
-
-  await IssuedBooks.findOneAndUpdate({ id: req.body.id }, { books: issues });
+  if (issues.length === 0) {
+    await IssuedBooks.findOneAndDelete({ id: req.body.id });
+  } else {
+    await IssuedBooks.findOneAndUpdate({ id: req.body.id }, { books: issues });
+  }
   await Book.findOneAndUpdate(
     { id: req.body.id },
-    { stock: book.stock, codesArray: book.codesArray }
+    { stock: book[0].stock, codesArray: book[0].codesArray }
   );
 
   if (borrowerType === "student") {
     const student = await Student.find({ rollNo: borrowerId });
     let issues = [];
-    for (let i = 0; i < student.booksIssued.length; i++) {
-      if (student.booksIssued[i].bookUniqueId !== req.body.uniqueId) {
-        issues.push(student.booksIssued[i]);
+    for (let i = 0; i < student[0].booksIssued.length; i++) {
+      if (student[0].booksIssued[i].bookUniqueId !== req.body.uniqueId) {
+        issues.push(student[0].booksIssued[i]);
       }
     }
     await Student.findOneAndUpdate(
@@ -109,9 +143,9 @@ router.post("/return", async (req, res) => {
   } else if (borrowerType === "teacher") {
     const teacher = await Teacher.find({ rollNo: borrowerId });
     let issues = [];
-    for (let i = 0; i < teacher.booksIssued.length; i++) {
-      if (teacher.booksIssued[i].bookUniqueId !== req.body.uniqueId) {
-        issues.push(teacher.booksIssued[i]);
+    for (let i = 0; i < teacher[0].booksIssued.length; i++) {
+      if (teacher[0].booksIssued[i].bookUniqueId !== req.body.uniqueId) {
+        issues.push(teacher[0].booksIssued[i]);
       }
     }
     await Teacher.findOneAndUpdate(

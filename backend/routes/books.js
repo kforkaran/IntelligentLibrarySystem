@@ -8,8 +8,14 @@ router.post("/addBook", async (req, res) => {
   const bookId = req.body.id;
   const noOfCopies = req.body.noOfCopies;
   const fetchedData = await Book.findOne({ id: bookId });
+  const generatedUniqueIds = [];
   if (fetchedData) {
-    for (let i = fetchedData.noOfCopies + 1; i <= noOfCopies; i++) {
+    for (
+      let i = fetchedData.noOfCopies + 1;
+      i <= noOfCopies + fetchedData.noOfCopies;
+      i++
+    ) {
+      generatedUniqueIds.push(fetchedData.id + "_" + i);
       fetchedData.codesArray.push(fetchedData.id + "_" + i);
     }
     fetchedData.noOfCopies += noOfCopies;
@@ -23,7 +29,8 @@ router.post("/addBook", async (req, res) => {
       }
     );
     res.json({
-      success: true
+      success: true,
+      uids: generatedUniqueIds
     });
   } else {
     fetch("https://www.googleapis.com/books/v1/volumes/" + bookId)
@@ -55,12 +62,14 @@ router.post("/addBook", async (req, res) => {
           codesArray: []
         });
         for (let i = 1; i <= noOfCopies; i++) {
+          generatedUniqueIds.push(book.id + "_" + i);
           book.codesArray.push(book.id + "_" + i);
         }
         console.log(book);
         await book.save();
         res.json({
-          success: true
+          success: true,
+          uids: generatedUniqueIds
         });
       })
       .catch(err => {
