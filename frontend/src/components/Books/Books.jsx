@@ -12,7 +12,7 @@ class Books extends Component {
     }
 
     componentDidMount(){
-        fetch("https://www.googleapis.com/books/v1/volumes?q=introduction+to+algorithms+by+clrs")
+        fetch("https://www.googleapis.com/books/v1/volumes?q=introduction to algorithms by clrs&maxResults=20")
         .then((response) => response.json())
         .then(res => this.setState({books : res.items}))
     }
