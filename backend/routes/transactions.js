@@ -62,7 +62,13 @@ router.post("/issue", async (req, res) => {
     });
     await teacher.save();
   }
-  await Book.findByIdAndUpdate({ id: req.body.id }, { stock: book.stock });
+  await Book.findByIdAndUpdate(
+    { id: req.body.id },
+    { stock: book.stock, codesArray: book.codesArray }
+  );
+  res.json({
+    success: true
+  });
 });
 
 module.exports = router;
