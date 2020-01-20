@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Book = new mongoose.Schema({
   id: String,
   noOfCopies: Number,
+  stock: Number,
   volumeInfo: {
     title: String,
     subtitle: String,
