@@ -1,30 +1,30 @@
-import React from 'react';
-import Navbar from './components/Navbar';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import SearchBar from './components/SearchBar';
+import React from "react";
+import { Provider } from "react-redux";
+
+import store from "./store";
+
+import Navbar from "./components/common/Navbar";
+// import Grid from '@material-ui/core/Grid';
+// import Typography from '@material-ui/core/Typography';
+// import SearchBar from './components/common/SearchBar';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Dashboard from './components/Dash/Dashboard';
-import './App.css';
+import Dashboard from "./components/Dash/Dashboard";
+import "./App.css";
+import Barcode from "./components/Barcode";
+import Landing from "./components/Landing";
 
 function App() {
   return (
-    <div className="App">
-    <Router>
-      <Navbar />
-      <Route exact path="/">
-        <Grid className="container_parent" direction="column" justify="center" container="true" alignItems="center">
-        <Typography className="hero_text" variant="h2" noWrap>
-          Andaman College Library
-        </Typography>
-          <SearchBar />
-        </Grid>
-      </Route>
-      <Route>
-        <Dashboard />
-      </Route>
+    <Provider store={store}>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <Route exact path="/" component={Landing} />
+          <Route exact path="/dashboard" component={Dashboard} />
+          <Route exact path="/barcode" component={Barcode} />
+        </div>
       </Router>
-    </div>
+    </Provider>
   );
 }
 
