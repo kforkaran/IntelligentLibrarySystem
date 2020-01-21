@@ -18,6 +18,8 @@ import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import axios from "axios";
+import {withRouter} from "react-router-dom"
+import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -46,17 +48,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const addToDB = async id => {
+const addToDB = async (id, history) => {
   console.log(id);
   const bookData = {
     id,
     noOfCopies: 10
   }
   await axios.post("http://localhost:8000/api/admin/addBook", bookData);
-  console.log("book added")
+  console.log("book added");
+  history.push("/dashboard");
 }
 
-export default function RecipeReviewCard(props) {
+function MeraCard(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -104,3 +107,5 @@ export default function RecipeReviewCard(props) {
     </Card>
   );
 }
+
+export default withRouter(MeraCard);

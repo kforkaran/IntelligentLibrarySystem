@@ -134,20 +134,20 @@ export default function Dashboard() {
         <Divider />
         <List>{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        {/* <List>{secondaryListItems}</List> */}
       </Drawer>
       <main className={classes.content}>
         {/* <div className={classes.appBarSpacer} /> */}
-        <Container maxWidth="lg" className={classes.container}>
+        {/* <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Recent Orders */}
+            Recent Orders
             <Grid item xs={12}>
                 <Paper className={classes.paper}>
                  <Orders />
                 </Paper>
             </Grid>
           </Grid>
-        </Container>
+        </Container> */}
       </main>
     </div>
   );
