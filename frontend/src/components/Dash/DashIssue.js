@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBarShift: {
     marginLeft: drawerWidth,
-    width: `calc(80% - ${drawerWidth}px)`,
+    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -141,10 +141,21 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Recent Orders */}
-            <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                 <Orders />
-                </Paper>
+            <Grid item xs={12}>                
+              <Paper className={classes.paper}>
+                  <Grid
+                  className="container_parent"
+                  direction="column"
+                  justify="center"
+                  container="true"
+                  alignItems="center"
+                >
+                  <Typography className="hero_text" variant="h3" noWrap>
+                    Issue A Book
+                  </Typography>
+                  <SearchBar />
+                </Grid>
+                  </Paper>
             </Grid>
           </Grid>
         </Container>
