@@ -32,6 +32,10 @@ Our Library Management system uses following stack:
 * [Dialogflow] - end-to-end development suite for creating conversational interfaces for websites, mobile applications,etc
 * [Google Assistant] - android friendly assistant to fulfill your queries
 
+### Usage Flow
+
+![image](https://i.ibb.co/bdvSdxr/Untitled-Diagram.png)
+
 ### Installation
 
 Our Library management system requires [Node.js](https://nodejs.org/) v10+ to run.
