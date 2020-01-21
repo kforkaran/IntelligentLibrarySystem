@@ -54,9 +54,9 @@ const addToDB = async (id, history) => {
     id,
     noOfCopies: 10
   }
-  await axios.post("http://localhost:8000/api/admin/addBook", bookData);
+  let bookIds = await axios.post("http://localhost:8000/api/admin/addBook", bookData);
   console.log("book added");
-  history.push("/dashboard");
+  history.push("/barcode?uids=" + bookIds.data.uids);
 }
 
 function MeraCard(props) {
