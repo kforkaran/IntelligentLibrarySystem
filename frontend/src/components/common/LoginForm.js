@@ -7,6 +7,7 @@ import {loginUser} from "../../actions/authActions";
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
+
 const styles = theme => ({
     margin: {
         margin: theme.spacing.unit * 2,
@@ -36,7 +37,8 @@ class LoginForm extends React.Component {
         password: this.state.password
       };
       this.props.loginUser(userData);
-    //   this.props.history.push('/dashboard');
+      
+      this.props.history.push('/dashAdd');
     }
 
     render() {
@@ -120,4 +122,4 @@ const mapStateToProps = state => ({
 export default compose(
   withStyles(styles),
   connect(mapStateToProps, {loginUser})
-)(LoginForm);
+)(withRouter(LoginForm));

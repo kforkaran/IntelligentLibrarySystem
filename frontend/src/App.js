@@ -19,6 +19,7 @@ import "./App.css";
 import Barcode from "./components/Barcode";
 import Landing from "./components/Landing";
 import Books from "./components/Books/Books";
+import SearchForDB from "./components/SearchForDB";
 import SingleBook from "./components/SingleBook/SingleBook";
 import Test from "./components/Test";
 import setAuthToken from "./utils/setAuthToken";
@@ -60,6 +61,7 @@ function App() {
           <Route exact path="/books" component={Books} />
           <Route exact path="/singlebook/:id" component={SingleBook} />
           <Route exact path="/barcode-scanner" component={Test} />
+          <Route exact path="/searchdb" component={SearchForDB} />
         </div>
       </Router>
     </Provider>
@@ -67,3 +69,4 @@ function App() {
 }
 
 export default App;
+  
