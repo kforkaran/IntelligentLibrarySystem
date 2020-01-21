@@ -18,8 +18,8 @@ router.post("/addBook", async (req, res) => {
       generatedUniqueIds.push(fetchedData.id + "_" + i);
       fetchedData.codesArray.push(fetchedData.id + "_" + i);
     }
-    fetchedData.noOfCopies += noOfCopies;
-    fetchedData.stock += noOfCopies;
+    fetchedData.noOfCopies += +noOfCopies;
+    fetchedData.stock += +noOfCopies;
     await Book.findOneAndUpdate(
       { id: bookId },
       {
@@ -36,6 +36,7 @@ router.post("/addBook", async (req, res) => {
     fetch("https://www.googleapis.com/books/v1/volumes/" + bookId)
       .then(res => res.json())
       .then(async result => {
+        console.log(result);
         const book = new Book({
           id: result.id,
           noOfCopies: noOfCopies,
