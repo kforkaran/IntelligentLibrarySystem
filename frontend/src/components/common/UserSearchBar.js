@@ -8,7 +8,8 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import MicIcon from "@material-ui/icons/Mic";
 import { compose } from "redux";
-import { withRouter } from "react-router-dom";
+import {withRouter} from "react-router-dom";
+import axios from "axios";
 // import { connect } from "react-redux";
 // import VoiceAssist from '../../public/assets/voice_assist';
 // import Artyom from 'artyom.js';
@@ -66,7 +67,7 @@ const styles = theme => ({
   }
 });
 
-class SearchBar extends React.Component {
+class UserSearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -126,6 +127,7 @@ class SearchBar extends React.Component {
       // document.getElementById('interim').innerHTML = interimTranscript
       // document.getElementById('final').innerHTML = finalTranscript
       this.setState({ input: finalTranscript });
+      this.fetchAllBooks();
       //-------------------------COMMANDS------------------------------------
 
       const transcriptArr = finalTranscript.split(" ");
@@ -149,6 +151,27 @@ class SearchBar extends React.Component {
       // console.log("Error occurred in recognition: " + event.error);
     };
   }
+  fetchAllBooks = () =>{
+    let ids = [];
+    if(this.state.input !== "") {
+      console.log(this.state);
+    fetch("https://www.googleapis.com/books/v1/volumes?q=" + this.state.input + "&maxResults=20")
+        .then(function(response) { return response.json(); })
+        .then(function(res) { 
+          res.items.map((book) => {
+            ids.push(book.id);
+            // console.log(book.id);
+
+            // axios 
+            axios.post('http://localhost:8000/api/user/search', ids)
+            .then((res) => {
+              console.log(res.json());
+            }).catch((err) => console.log(err));
+          });
+        })
+        .catch(err => console.log(err));
+    }
+  }
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -156,9 +179,9 @@ class SearchBar extends React.Component {
 
   onSearch = () => {
     if (this.state.input != "") {
-      this.props.history.push("/dashAdd2?q=" + this.state.input);
+      this.props.history.push("/books?q=" + this.state.input);
     }
-  };
+  }
 
   render() {
     const { classes } = this.props;
@@ -200,6 +223,6 @@ class SearchBar extends React.Component {
 const mapStateToProps = state => {};
 
 export default compose(
-  withStyles(styles)
+  withStyles(styles),
   // connect(mapStateToProps, { setBooks })
-)(withRouter(SearchBar));
+)(withRouter(UserSearchBar));
