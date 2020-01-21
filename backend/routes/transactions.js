@@ -10,6 +10,7 @@ router.post("/issue", async (req, res) => {
   const result = await IssuedBooks.find({ id: req.body.id });
   const book = await Book.find({ id: req.body.id });
   const uniqueId = book[0].codesArray.pop();
+
   book[0].stock--;
   if (result && result.length !== 0) {
     result[0].books.push({
@@ -45,7 +46,7 @@ router.post("/issue", async (req, res) => {
     student.booksIssued.push({
       bookId: req.body.id,
       bookUniqueId: uniqueId,
-      issuedDate: req.body.issuedDate,
+      issueDate: req.body.issuedDate,
       dueDate: req.body.dueDate
     });
     const st = await Student.findOne({ rollNo: req.body.borrowerId });
@@ -53,7 +54,7 @@ router.post("/issue", async (req, res) => {
       st.booksIssued.push({
         bookId: req.body.id,
         bookUniqueId: uniqueId,
-        issuedDate: req.body.issuedDate,
+        issueDate: req.body.issuedDate,
         dueDate: req.body.dueDate
       });
       await Student.findOneAndUpdate(
@@ -73,7 +74,7 @@ router.post("/issue", async (req, res) => {
     teacher.booksIssued.push({
       bookId: req.body.id,
       bookUniqueId: uniqueId,
-      issuedDate: req.body.issuedDate,
+      issueDate: req.body.issuedDate,
       dueDate: req.body.dueDate
     });
     const t = await Teacher.findOne({ rollNo: req.body.bookId });
@@ -81,7 +82,7 @@ router.post("/issue", async (req, res) => {
       t.booksIssued.push({
         bookId: req.body.id,
         bookUniqueId: uniqueId,
-        issuedDate: req.body.issuedDate,
+        issueDate: req.body.issuedDate,
         dueDate: req.body.dueDate
       });
       await Teacher.findOneAndUpdate(

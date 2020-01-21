@@ -37,6 +37,7 @@ app.intent("Get Personal Details", (conv, { roll }) => {
       //     description: 'Issued On: Tue Jan 21 2020 05:30:00 GMT+0530 (India Standard Time)<br>Due On: Wed Jan 22 2020 05:30:00 GMT+0530 (India Standard Time)'
       //   }
       // };
+      const items = {};
 
       books.forEach((book, i) => {
         const studentBookDetails = student.booksIssued.find(b => b.bookId == book.id);
