@@ -11,6 +11,7 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
@@ -68,7 +69,7 @@ function MeraCard(props) {
   console.log(props.book);
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} style={{minWidth:'300px'}}>
       <CardHeader
         // avatar={
         //   <Avatar aria-label="recipe" className={classes.avatar}>
@@ -83,15 +84,16 @@ function MeraCard(props) {
         title={props.book.title}
         subheader={props.book.authors}
       />
+      <Paper variant="outlined" style={{padding:'8px 12px',margin:'3px 5px 6px 5px', backgroundColor:'wheat'}}>Genre:   {props.book.categories}</Paper>
       <CardMedia
         className={classes.media}
         image={`${(props.book.imageLinks && props.book.imageLinks.thumbnail) ||
           null}`}
-        title="Paella dish"
+        title={props.book.title}
       />
       <CardActions disableSpacing>
-        <Button onClick={() => addToDB(props.id, props.history)}>Add this book</Button>
-        <IconButton
+        <Button  style={{padding:'8px 12px',margin:'3px 5px 6px 5px', backgroundColor:'wheat'}} onClick={() => addToDB(props.id)}>Add this book</Button>
+        {/* <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded
           })}
@@ -100,7 +102,7 @@ function MeraCard(props) {
           aria-label="show more"
         >
           <ExpandMoreIcon />
-        </IconButton>
+        </IconButton> */}
       </CardActions>
     </Card>
   );
