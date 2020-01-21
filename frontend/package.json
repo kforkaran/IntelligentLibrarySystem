@@ -13,6 +13,7 @@
     "axios": "^0.19.1",
     "bwip-js": "^2.0.5",
     "jwt-decode": "^2.2.0",
+    "query-string": "^6.10.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-redux": "^7.1.3",
