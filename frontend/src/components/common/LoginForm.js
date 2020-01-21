@@ -38,7 +38,7 @@ class LoginForm extends React.Component {
       };
       this.props.loginUser(userData);
       
-      this.props.history.push('/dashboard');
+      this.props.history.push('/dashAdd');
     }
 
     render() {
