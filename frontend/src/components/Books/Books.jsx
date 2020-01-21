@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import CardList from "../CardList/CardList"
+import queryString from "query-string";
 
 class Books extends Component {
     
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
 
         this.state = {
             books : []
@@ -12,7 +13,8 @@ class Books extends Component {
     }
 
     componentDidMount(){
-        fetch("https://www.googleapis.com/books/v1/volumes?q=introduction to algorithms by clrs&maxResults=20")
+        const searchParams = queryString.parse(this.props.location.search);
+        fetch("https://www.googleapis.com/books/v1/volumes?q=" + searchParams.q + "&maxResults=20")
         .then((response) => response.json())
         .then(res => this.setState({books : res.items}))
     }
