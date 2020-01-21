@@ -3,16 +3,17 @@ import React, { Component } from "react";
 // import './App.css';
 import bwipjs from "bwip-js";
 import ReactToPrint from "react-to-print";
+import queryString from "query-string";
 
 class BarcodeCanvases extends Component {
-  state = {
-    bookIds: [
-      "14646465464",
-      "51464564614",
-      "231645566160",
-      "231645566160"
-    ]
-  };
+  constructor(props) {
+    super(props);
+    let books = [];
+    books = props.books.split(",");
+    this.state = {
+      bookIds: books
+    };
+  }
 
   componentDidMount() {
     try {
@@ -22,7 +23,7 @@ class BarcodeCanvases extends Component {
           bcid: "code128", // Barcode type
           text: this.state.bookIds[i], // Text to encode
           scale: 2, // 3x scaling factor
-          height: 8, // Bar height, in millimeters
+          height: 10, // Bar height, in millimeters
           includetext: true, // Show human-readable text
           textxalign: "center" // Always good to set this
         });
@@ -45,6 +46,14 @@ class BarcodeCanvases extends Component {
 }
 
 class Barcode extends Component {
+  constructor(props) {
+    super(props);
+    const searchParams = queryString.parse(props.location.search);
+    this.state = {
+      books: searchParams.uids
+    };
+  }
+
   render() {
     return (
       <div>
@@ -55,7 +64,7 @@ class Barcode extends Component {
           trigger={() => <button>Print Barcodes</button>}
           content={() => this.componentRef}
         />
-        <BarcodeCanvases ref={el => (this.componentRef = el)} />
+        <BarcodeCanvases ref={el => (this.componentRef = el)} books={this.state.books} />
       </div>
     );
   }
