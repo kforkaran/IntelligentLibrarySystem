@@ -134,7 +134,7 @@ export default function Dashboard() {
         <Divider />
         <List>{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        {/* <List>{secondaryListItems}</List> */}
       </Drawer>
       <main className={classes.content}>
         {/* <div className={classes.appBarSpacer} /> */}
@@ -147,7 +147,7 @@ export default function Dashboard() {
                   className="container_parent"
                   direction="column"
                   justify="center"
-                  container="true"
+                  container={true}
                   alignItems="center"
                 >
                   <Typography className="hero_text" variant="h3" noWrap>

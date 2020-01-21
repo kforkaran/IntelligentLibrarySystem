@@ -44,7 +44,7 @@ app.intent("Get Personal Details", (conv, { roll }) => {
         items[i] = {
           title: book.volumeInfo.title,
           description: "Issued On: " + studentBookDetails.issueDate.toDateString()
-            + "<br>Due On: " + studentBookDetails.dueDate.toDateString()
+            + "  \nDue On: " + studentBookDetails.dueDate.toDateString()
         }
       });
       console.log(items);
