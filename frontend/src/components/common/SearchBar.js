@@ -48,13 +48,16 @@ const styles = theme => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 400
+    width: "50%",
+    minWidth: "300px",
+    borderRadius: "30px",
+    boxShadow: "0 1px 3px 0px #000"
   },
   input: {
-    marginLeft: "1rem",
     flex: 1
   },
   iconButton: {
+    marginLeft: "0rem",
     padding: 10
   },
   divider: {
@@ -75,11 +78,11 @@ class SearchBar extends React.Component {
   }
 
   componentDidUpdate = () => {
-    // console.log(this.props);
-    if (!this.state.listening && this.state.input != "") {
-      this.props.history.push("/books?q=" + this.state.input);
-      // this.props.setBooks(this.state.input, this.props.history);
-    }
+    // // console.log(this.props);
+    // if (!this.state.listening && this.state.input != "") {
+    //   this.props.history.push("/books?q=" + this.state.input);
+    //   // this.props.setBooks(this.state.input, this.props.history);
+    // }
   };
 
   toggleListen() {
@@ -92,23 +95,23 @@ class SearchBar extends React.Component {
   }
 
   handleListen() {
-    console.log("listening?", this.state.listening);
+    // console.log("listening?", this.state.listening);
 
     if (this.state.listening) {
       recognition.start();
       recognition.onend = () => {
-        console.log("...continue listening...");
+        // console.log("...continue listening...");
         recognition.start();
       };
     } else {
       recognition.stop();
       recognition.onend = () => {
-        console.log("Stopped listening per click");
+        // console.log("Stopped listening per click");
       };
     }
 
     recognition.onstart = () => {
-      console.log("Listening!");
+      // console.log("Listening!");
     };
 
     let finalTranscript = "";
@@ -127,15 +130,15 @@ class SearchBar extends React.Component {
 
       const transcriptArr = finalTranscript.split(" ");
       const stopCmd = transcriptArr.slice(-3, -1);
-      console.log("stopCmd", stopCmd);
+      // console.log("stopCmd", stopCmd);
 
       if (stopCmd[0] === "stop" && stopCmd[1] === "listening") {
         recognition.stop();
         recognition.onend = () => {
-          console.log("Stopped listening per command");
+          // console.log("Stopped listening per command");
           const finalText = transcriptArr.slice(0, -3).join(" ");
           document.getElementById("final").innerHTML = finalText;
-          console.log("Final text is: " + finalText);
+          // console.log("Final text is: " + finalText);
         };
       }
     };
@@ -143,7 +146,7 @@ class SearchBar extends React.Component {
     //-----------------------------------------------------------------------
 
     recognition.onerror = event => {
-      console.log("Error occurred in recognition: " + event.error);
+      // console.log("Error occurred in recognition: " + event.error);
     };
   }
 
@@ -151,25 +154,32 @@ class SearchBar extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  onSearch = () => {
+    if (this.state.input != "") {
+      this.props.history.push("/books?q=" + this.state.input);
+    }
+  }
+
   render() {
     const { classes } = this.props;
     return (
       <Paper component="form" className={classes.root}>
-        <InputBase
-          name="input"
-          className={classes.input}
-          placeholder="Enter Input"
-          inputProps={{ "aria-label": "enter input" }}
-          value={this.state.input}
-          onChange={this.onChange}
-        />
         <IconButton
           type="submit"
           className={classes.iconButton}
           aria-label="search"
+          onClick={this.onSearch}
         >
           <SearchIcon />
         </IconButton>
+        <InputBase
+          name="input"
+          className={classes.input}
+          placeholder="Search for books ..."
+          inputProps={{ "aria-label": "enter input" }}
+          value={this.state.input}
+          onChange={this.onChange}
+        />
         <Divider className={classes.divider} orientation="vertical" />
         <IconButton
           id="message microphone-btn"

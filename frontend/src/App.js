@@ -1,7 +1,10 @@
 import React from "react";
 import { Provider } from "react-redux";
+import jwt_decode from "jwt-decode";
 
 import store from "./store";
+
+import { setCurrentUser, logoutUser } from "./actions/authActions";
 
 import Navbar from "./components/common/Navbar";
 // import Grid from '@material-ui/core/Grid';
@@ -14,6 +17,30 @@ import Barcode from "./components/Barcode";
 import Landing from "./components/Landing";
 import Books from "./components/Books/Books";
 import SingleBook from "./components/SingleBook/SingleBook";
+import Test from "./components/Test";
+import setAuthToken from "./utils/setAuthToken";
+
+
+// Check for token
+if (localStorage.jwtToken) {
+  // Set auth token header auth
+  setAuthToken(localStorage.jwtToken);
+  // Decode token and get user info and exp
+  const decoded = jwt_decode(localStorage.jwtToken);
+  // Set user and isAuthenticated
+  store.dispatch(setCurrentUser(decoded));
+
+  // Check for expired token
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    // Logout user
+    store.dispatch(logoutUser());
+    // Clear current Profile
+    // store.dispatch(clearCurrentProfile());
+    // Redirect to login
+    window.location.href = '/login';
+  }
+}
 
 function App() {
   return (
@@ -26,6 +53,7 @@ function App() {
           <Route exact path="/barcode" component={Barcode} />
           <Route exact path="/books" component={Books} />
           <Route exact path="/singlebook/:id" component={SingleBook} />
+          <Route exact path="/barcode-scanner" component={Test} />
         </div>
       </Router>
     </Provider>
