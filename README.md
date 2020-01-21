@@ -18,7 +18,6 @@ ILM is a voice-based, mobile-ready, library management system.
   - Automatic categorization of books based on titles and data available about the book on the internet.
   - Issuing of Books with the help of barcode scanner.
 
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
 
 ### Tech Stack
 
