@@ -13,6 +13,7 @@ import Navbar from "./components/common/Navbar";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Dashboard from "./components/Dash/Dashboard";
 import DashAdd from "./components/Dash/DashAdd";
+import AddCardList from "./components/CardList/AddCardList";
 import DashIssue from "./components/Dash/DashIssue";
 import "./App.css";
 import Barcode from "./components/Barcode";
@@ -53,6 +54,7 @@ function App() {
           <Route exact path="/" component={Landing} />
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/dashadd" component={DashAdd} />
+          <Route exact path="/dashadd2" component={AddCardList} />
           <Route exact path="/dashissue" component={DashIssue} />
           <Route exact path="/barcode" component={Barcode} />
           <Route exact path="/books" component={Books} />

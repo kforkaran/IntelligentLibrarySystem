@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import MicIcon from "@material-ui/icons/Mic";
 import { compose } from "redux";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 // import { connect } from "react-redux";
 // import VoiceAssist from '../../public/assets/voice_assist';
 // import Artyom from 'artyom.js';
@@ -48,13 +48,16 @@ const styles = theme => ({
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 400
+    width: "50%",
+    minWidth: "300px",
+    borderRadius: "30px",
+    boxShadow: "0 1px 3px 0px #000"
   },
   input: {
-    marginLeft: "1rem",
     flex: 1
   },
   iconButton: {
+    marginLeft: "0rem",
     padding: 10
   },
   divider: {
@@ -63,7 +66,7 @@ const styles = theme => ({
   }
 });
 
-class UserSearchBar extends React.Component {
+class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -72,39 +75,15 @@ class UserSearchBar extends React.Component {
     };
     this.toggleListen = this.toggleListen.bind(this);
     this.handleListen = this.handleListen.bind(this);
-    this.fetchArray = this.fetchArray.bind(this);
   }
 
   componentDidUpdate = () => {
-    // console.log(this.props);
-    if (!this.state.listening && this.state.input != "") {
-      this.props.history.push("/books?q=" + this.state.input);
-      // this.props.setBooks(this.state.input, this.props.history);
-    }
+    // // console.log(this.props);
+    // if (!this.state.listening && this.state.input != "") {
+    //   this.props.history.push("/books?q=" + this.state.input);
+    //   // this.props.setBooks(this.state.input, this.props.history);
+    // }
   };
-
-  fetchArray() {
-    let totalbooks;
-      // const searchParams = queryString.parse(this.props.location.search);
-      fetch("https://www.googleapis.com/books/v1/volumes?q=" + this.state.input + "&maxResults=20")
-      .then((response) => response.json())
-      .then(res => {
-        this.setState({books : res.items});
-        console.log(res.items);
-        res.items.map((book) => {
-          totalbooks.push(book.id);
-        });
-      axios.post({
-        url: 'https://anyurl.com',
-        method: 'post',
-        data: totalbooks,
-      }).then((res) => {
-        console.log('Ready to receive books');
-      }).catch((err) => {
-        console.log('An error occured');
-      });    
-    })
-  }
 
   toggleListen() {
     this.setState(
@@ -116,23 +95,23 @@ class UserSearchBar extends React.Component {
   }
 
   handleListen() {
-    console.log("listening?", this.state.listening);
+    // console.log("listening?", this.state.listening);
 
     if (this.state.listening) {
       recognition.start();
       recognition.onend = () => {
-        console.log("...continue listening...");
+        // console.log("...continue listening...");
         recognition.start();
       };
     } else {
       recognition.stop();
       recognition.onend = () => {
-        console.log("Stopped listening per click");
+        // console.log("Stopped listening per click");
       };
     }
 
     recognition.onstart = () => {
-      console.log("Listening!");
+      // console.log("Listening!");
     };
 
     let finalTranscript = "";
@@ -146,22 +125,20 @@ class UserSearchBar extends React.Component {
       }
       // document.getElementById('interim').innerHTML = interimTranscript
       // document.getElementById('final').innerHTML = finalTranscript
-      console.log(finalTranscript);
       this.setState({ input: finalTranscript });
-      this.fetchArray();
       //-------------------------COMMANDS------------------------------------
 
       const transcriptArr = finalTranscript.split(" ");
       const stopCmd = transcriptArr.slice(-3, -1);
-      console.log("stopCmd", stopCmd);
+      // console.log("stopCmd", stopCmd);
 
       if (stopCmd[0] === "stop" && stopCmd[1] === "listening") {
         recognition.stop();
         recognition.onend = () => {
-          console.log("Stopped listening per command");
+          // console.log("Stopped listening per command");
           const finalText = transcriptArr.slice(0, -3).join(" ");
           document.getElementById("final").innerHTML = finalText;
-          console.log("Final text is: " + finalText);
+          // console.log("Final text is: " + finalText);
         };
       }
     };
@@ -169,7 +146,7 @@ class UserSearchBar extends React.Component {
     //-----------------------------------------------------------------------
 
     recognition.onerror = event => {
-      console.log("Error occurred in recognition: " + event.error);
+      // console.log("Error occurred in recognition: " + event.error);
     };
   }
 
@@ -177,25 +154,32 @@ class UserSearchBar extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  onSearch = () => {
+    if (this.state.input != "") {
+      this.props.history.push("/dashAdd2?q=" + this.state.input);
+    }
+  };
+
   render() {
     const { classes } = this.props;
     return (
       <Paper component="form" className={classes.root}>
-        <InputBase
-          name="input"
-          className={classes.input}
-          placeholder="Enter Input"
-          inputProps={{ "aria-label": "enter input" }}
-          value={this.state.input}
-          onChange={this.onChange}
-        />
         <IconButton
           type="submit"
           className={classes.iconButton}
           aria-label="search"
+          onClick={this.onSearch}
         >
           <SearchIcon />
         </IconButton>
+        <InputBase
+          name="input"
+          className={classes.input}
+          placeholder="Search for books ..."
+          inputProps={{ "aria-label": "enter input" }}
+          value={this.state.input}
+          onChange={this.onChange}
+        />
         <Divider className={classes.divider} orientation="vertical" />
         <IconButton
           id="message microphone-btn"
@@ -216,6 +200,6 @@ class UserSearchBar extends React.Component {
 const mapStateToProps = state => {};
 
 export default compose(
-  withStyles(styles),
+  withStyles(styles)
   // connect(mapStateToProps, { setBooks })
-)(withRouter(UserSearchBar));
+)(withRouter(SearchBar));
