@@ -23,7 +23,7 @@ import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: 345,
+    maxWidth: 445,
     boxShadow: "0 1px 4px -1px #000",
     "&:hover": {
       boxShadow: "0 1px 4px 0px #000"
@@ -69,7 +69,7 @@ function MeraCard(props) {
   console.log(props.book);
 
   return (
-    <Card className={classes.card} style={{minWidth:'300px'}}>
+    <Card className={classes.card}>
       <CardHeader
         // avatar={
         //   <Avatar aria-label="recipe" className={classes.avatar}>

@@ -163,7 +163,7 @@ class UserSearchBar extends React.Component {
             // console.log(book.id);
 
             // axios 
-            axios.post('http://localhost:8000/api/user/search', ids)
+            axios.post('http://localhost:8000/api/user/search', {ids})
             .then((res) => {
               console.log(res.json());
             }).catch((err) => console.log(err));

@@ -29,7 +29,7 @@ app.use("/api/admin", authRoutes);
 app.use("/api/admin", bookRoutes);
 app.use("/api/admin", transactionRoutes);
 app.post("/api/assistant", assistantRoutes);
-app.post("/api/user", userRoutes);
+app.use("/api/user", userRoutes);
 
 mongoose
   .connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
