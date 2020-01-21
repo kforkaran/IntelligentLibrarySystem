@@ -8,6 +8,7 @@ const keys = require("./config/keys");
 const authRoutes = require("./routes/auth");
 const bookRoutes = require("./routes/books");
 const transactionRoutes = require("./routes/transactions");
+const assistantRoutes = require('./routes/assistant');
 
 const app = express();
 
@@ -26,6 +27,7 @@ require("./config/passport")(passport);
 app.use("/api/admin", authRoutes);
 app.use("/api/admin", bookRoutes);
 app.use("/api/admin", transactionRoutes);
+app.post("/api/assistant", assistantRoutes);
 
 mongoose
   .connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
